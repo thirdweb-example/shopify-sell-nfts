@@ -1,4 +1,4 @@
-# Customizable NFT Drop Minting Page
+# Sell NFTs on Shopify
 
 This template allows you to sell NFTs as products in a Shopify store.
 
