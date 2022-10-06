@@ -26,6 +26,18 @@ SHOPIFY_SITE_URL=xxx
 SHOPIFY_ACCESS_TOKEN=xxx
 ```
 
+Run the following command to start the server:
+
+```bash
+npm run start
+```
+
+Optionally, you can expose your local server to a public URL using [localtunnel](https://www.npmjs.com/package/localtunnel):
+
+```bash
+npm run start:localtunnel
+```
+
 ## Guide
 
 The `index.js` file is a web server that listens for post requests on the `/webhooks/orders/create` route.
