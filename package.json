@@ -1,0 +1,23 @@
+{
+  "name": "shopify-sell-nfts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "prestart": "yarn run build",
+    "start": "node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@shopify/shopify-api": "^5.2.0",
+    "@thirdweb-dev/sdk": "^3.1.2",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.0.3",
+    "ethers": "^5.7.1",
+    "express": "^4.18.1",
+    "raw-body": "^2.5.1"
+  }
+}
