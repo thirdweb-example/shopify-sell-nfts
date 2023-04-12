@@ -20,7 +20,7 @@ app.post("/webhooks/orders/create", async (req, res) => {
 
   // Below, we're verifying the webhook was sent from Shopify and not a potential attacker
   // Learn more here: https://shopify.dev/apps/webhooks/configuration/https#step-5-verify-the-webhook
-  const hmac = req.get("X-Shopify-Hmac-Sha256");
+  const hmac = req.get("x-shopify-hmac-sha256");
   const body = await getRawBody(req);
   const hash = crypto
     .createHmac("sha256", SHOPIFY_SECRET_KEY)
@@ -35,7 +35,8 @@ app.post("/webhooks/orders/create", async (req, res) => {
       SHOPIFY_ACCESS_TOKEN
     );
 
-    const shopifyOrderId = req.get("X-Shopify-Order-Id");
+    const shopifyOrderId = req.get("x-shopify-order-id")
+    
     const response = await client.get({
       type: DataType.JSON,
       path: `/admin/api/2022-07/orders/${shopifyOrderId}.json`,
@@ -49,7 +50,10 @@ app.post("/webhooks/orders/create", async (req, res) => {
       "goerli"
     );
 
-    const nftCollection = await sdk.getNFTCollection(NFT_COLLECTION_ADDRESS);
+    const nftCollection = await sdk.getContract(
+      NFT_COLLECTION_ADDRESS,
+      "nft-collection"
+    )
 
     // For each item purchased, mint the wallet address an NFT
     for (const item of itemsPurchased) {
@@ -62,13 +66,15 @@ app.post("/webhooks/orders/create", async (req, res) => {
       // Set the metadata for the NFT to the product information
       const metadata = {
         name: productQuery.body.product.title,
-        description: productQuery.body.product.body_html,
+        description: productQuery.body.product.body_html
+          .replace("<span>", "")
+          .replace("</span>", ""),
         image: productQuery.body.product.image.src,
       };
 
-      const walletAddress = item.properties.find(
-        (p) => p.name === "Wallet Address"
-      ).value;
+      const myItem = response.body.order.line_items[0]
+      const myWallet = myItem.properties[0]
+      const walletAddress = myWallet.value
 
       // Mint the NFT
       const minted = await nftCollection.mintTo(walletAddress, metadata);
